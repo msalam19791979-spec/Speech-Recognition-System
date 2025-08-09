@@ -1,0 +1,58 @@
+import speech_recognition as sr
+
+def speech_to_text(audio_file=None):
+    recognizer = sr.Recognizer()
+
+    # Use microphone or audio file
+    if audio_file:
+        with sr.AudioFile(audio_file) as source:
+            print("Processing audio file...")
+            audio_data = recognizer.record(source)
+    else:
+        with sr.Microphone() as source:
+            print("Speak something...")
+            audio_data = recognizer.listen(source)
+
+    try:
+        text = recognizer.recognize_google(audio_data)
+        print("Transcription:", text)
+    except sr.UnknownValueError:
+        print("Could not understand audio.")
+    except sr.RequestError as e:
+        print(f"API request error: {e}")
+
+# Example: using a .wav file
+speech_to_text("sample.wav")  # Replace with your audio file
+
+# Or use microphone
+# speech_to_text()
+
+import torch
+import torchaudio
+from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+
+def wav2vec_transcribe(audio_path):
+    # Load pre-trained model and processor
+    processor = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base-960h")
+    model = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
+
+    # Load and preprocess audio
+    waveform, sample_rate = torchaudio.load(audio_path)
+    if sample_rate != 16000:
+        resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
+        waveform = resampler(waveform)
+
+    # Prepare input
+    input_values = processor(waveform.squeeze(), return_tensors="pt", sampling_rate=16000).input_values
+
+    # Perform inference
+    with torch.no_grad():
+        logits = model(input_values).logits
+
+    predicted_ids = torch.argmax(logits, dim=-1)
+    transcription = processor.decode(predicted_ids[0])
+
+    print("Transcription:", transcription)
+
+# Example usage
+wav2vec_transcribe("sample.wav")  # Replace with your own audio file
