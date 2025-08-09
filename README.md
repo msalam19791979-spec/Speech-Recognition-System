@@ -1,3 +1,10 @@
+*COMPANY* :- CODTECH IT SOLUTION
+*NAME* :- MISHKAT NOORI
+*INTERN ID* :- CT04DZ155
+*DOMAIN* :- AI
+*DURATION* :- 4 WEEKS FROM JULY TO AUGUST 2025
+*MENTOR* :- NEELA SANTHOSH KUMAR
+*OVERVIEW OF THE PROJECT* :- SPEECH RECOGNITION SYSTEM 
 # Speech Recognition with Python
 
 [![Known Vulnerabilities](http://snyk.io/test/github/mramshaw/Speech-Recognition/badge.svg?style=plastic&targetFile=requirements.txt)](http://snyk.io/test/github/mramshaw/Speech-Recognition?style=plastic&targetFile=requirements.txt)
